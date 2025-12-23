@@ -222,7 +222,7 @@ def load_integrated_data():
 # ---------------------------------------------------------
 # 3. SIDEBAR NAVIGATION (TETAP)
 # ---------------------------------------------------------
-st.sidebar.title("🗂️ Navigasi Laporan")
+st.sidebar.title("Navigasi Laporan")
 page = st.sidebar.radio("Pilih Bab:", [
     "BAB I: The Global Context",
     "BAB II: National System Failure",
@@ -306,7 +306,7 @@ if page == "BAB I: The Global Context":
 
 
     # --- Grafik 2: LIBERTY PENALTY ---
-    st.subheader("2. The Liberty Penalty (Data 2024)")
+    st.subheader("2. The Liberty Penalty")
     df_rights = get_rights_vs_growth()
     
     if not df_rights.empty:
@@ -379,12 +379,14 @@ if page == "BAB I: The Global Context":
             barmode='group',
             height=600,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-            xaxis=dict(title="Negara (Urutan Beban Kerja Tertinggi ke Terendah)"),
+            xaxis=dict(title="Negara"),
             yaxis=dict(title="Jam Kerja per Tahun", range=[0, df_hours_growth['Jam Kerja'].max() * 1.2]),
-            yaxis2=dict(title="Laju Pertumbuhan Industri (%)", side="right", range=[-10, 25])
+            yaxis2=dict(title="Pertumbuhan Industri (%)", side="right", range=[-10, 25])
         )
 
         st.plotly_chart(fig3, use_container_width=True)
+
+    
 
 # ---------------------------------------------------------
 # 4. LOGIK HALAMAN: BAB II
@@ -407,6 +409,17 @@ elif page == "BAB II: National System Failure":
                           yaxis=dict(title="USD/Bulan", range=[0, 400], showgrid=False), 
                           template="plotly_dark")
     st.plotly_chart(fig_wage, use_container_width=True)
+
+    c1, c2, c3, c4 = st.columns(4)
+    with c1: 
+        st.metric("🇮🇩 Indonesia", f"${df_wage.iloc[0]['GDP ($ Trillion)']} T")
+    with c2: 
+        st.metric("🇷🇺 Russia", f"${df_wage.iloc[1]['GDP ($ Trillion)']} T")
+    with c3: 
+        st.metric("🇨🇳 China", f"${df_wage.iloc[2]['GDP ($ Trillion)']} T")
+    with c4: 
+        st.metric("🇮🇳 India", f"${df_wage.iloc[3]['GDP ($ Trillion)']} T")
+
     st.markdown("""
     <div class="analysis-box">
         <h3 style="margin-top:0;">🔍 Analisis: The Delusional Pricing</h3>
@@ -422,7 +435,7 @@ elif page == "BAB II: National System Failure":
     st.markdown("---")
 
     # --- SEKSI B: THE EFFICIENCY TRANSITION (WASTED ASSETS) ---
-    st.subheader("2. Wasted Assets (Status Quo)")
+    st.subheader("2. Wasted Assets")
 
     df_pris = get_prison_stats()
     fig_pris = px.bar(df_pris, x='Kategori', y='Jumlah', text='Jumlah', 
@@ -531,7 +544,7 @@ elif page == "BAB III: Neo-Slavery Efficiency Model":
     """, unsafe_allow_html=True)
 
     # --- ANALISIS 1: DESKRIPTIF ---
-    st.header("1. Analisis Deskriptif: Konsolidasi Aset Neo-Slavery")
+    st.header("1. Konsolidasi Aset Neo-Slavery")
     
     try:
         indo_slavery = df_bench[df_bench['Country'] == 'Indonesia']['Slavery_Pop'].values[0]
@@ -556,7 +569,7 @@ elif page == "BAB III: Neo-Slavery Efficiency Model":
         st.plotly_chart(fig_desc, use_container_width=True)
 
     # --- ANALISIS 2: DIAGNOSTIK ---
-    st.header("2. Analisis Diagnostik: Menghapus 'Democracy Penalty'")
+    st.header("2. Menghapus 'Democracy Penalty'")
     st.write("Mendiagnosis hambatan ekonomi akibat biaya upah minimum dibandingkan dengan model biaya pemeliharaan minimum.")
 
     df_diag = pd.DataFrame({
@@ -581,14 +594,14 @@ elif page == "BAB III: Neo-Slavery Efficiency Model":
     st.markdown("""
     <div class="analysis-box">
         <b>Insight Diagnostik:</b> Dengan menekan biaya tenaga kerja dari upah standar menjadi sekadar 
-        <b>biaya subsistensi (Rp 30.000/hari - Uang Rokok)</b>, biaya operasional per unit tenaga kerja dipangkas sebesar 
+        <b>biaya subsistensi (Rp 30.000/Minggu - Uang Rokok)</b>, biaya operasional per unit tenaga kerja dipangkas sebesar 
         <b>99.4%</b>. Marjin keuntungan masif ini dialokasikan sepenuhnya untuk akselerasi industri strategis negara.
     </div>
     """, unsafe_allow_html=True)
 
-   # --- ANALISIS 3: PREDIKTIF (INTEGRASI DATA BAB I & II) ---
-    st.header("3. Analisis Prediktif: Proyeksi Dominasi Global")
-    st.write("Mengukur potensi akselerasi GDP melalui aktivasi *Total Efficiency Pool* (Slavery + Prison Surplus) menuju benchmark Russia.")
+# --- ANALISIS 3: PREDIKTIF (INTEGRASI DATA BAB I & II) ---
+    st.header("3. Proyeksi Dominasi Global")
+    st.write("Mengukur potensi akselerasi GDP melalui aktivasi *Total Efficiency Pool* (Slavery + Prison Surplus).")
 
     # 1. Logika Integrasi Data
     try:
@@ -704,4 +717,3 @@ elif page == "BAB III: Neo-Slavery Efficiency Model":
         </ul>
     </div>
     """, unsafe_allow_html=True)
-
