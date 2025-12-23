@@ -112,13 +112,13 @@ st.markdown("""
 df_error = pd.DataFrame({
     'Metrik': ['Daya Beli Masyarakat', 'Biaya Keamanan & Sosial', 'Produktivitas Per Jam', 'Inovasi Industri'],
     'Standard Model': [100, 20, 100, 100],
-    'Neo-Slavery Model': [2, 150, 15, 5]
+    'Indo-Slavery Model': [2, 150, 15, 5]
 })
 
 fig_error = px.bar(
     df_error, 
     x='Metrik', 
-    y=['Standard Model', 'Neo-Slavery Model'],
+    y=['Standard Model', 'Indo-Slavery Model'],
     barmode='group',
     title="Dampak Jangka Panjang: Kehancuran Ekosistem Ekonomi",
     labels={'value': 'Indeks Efektivitas', 'variable': 'Model'},
@@ -336,9 +336,9 @@ st.plotly_chart(fig6, use_container_width=True)
 st.caption("Analisis Jujur: Negara-negara terkaya (GDP tinggi) justru secara konsisten memiliki tingkat prevalensi perbudakan terendah.")
 
 # ---------------------------------------------------------
-# BAB III: THE NEO-SLAVERY MODEL (VERSI JUJUR)
+# BAB III: THE Indo-SLAVERY MODEL (VERSI JUJUR)
 # ---------------------------------------------------------
-st.header("BAB III: EVALUASI RISIKO MODEL NEO-SLAVERY")
+st.header("BAB III: EVALUASI RISIKO MODEL INDO-SLAVERY")
 st.subheader("1. Kontradiksi Hukum dan Resiko Isolasi Ekonomi")
 
 # Mengambil data real dari dataset slavery dan tahanan
@@ -352,7 +352,7 @@ if isinstance(modern_slavery_count, str):
 fig7 = px.bar(
     x=['Modern Slavery Population', 'Prison Surplus (Overcrowding)'], 
     y=[modern_slavery_count, prison_surplus],
-    title="Perbandingan Kelompok Populasi Terdampak (Data Riil)",
+    title="Perbandingan Kelompok Populasi Terdampak",
     labels={'x': 'Kategori Kelompok', 'y': 'Jumlah Jiwa'},
     color=['Slavery', 'Prison'], 
     color_discrete_sequence=['#E64A19', '#37474F'],
@@ -367,100 +367,54 @@ st.markdown("""
 > yang akan melumpuhkan ekspor manufaktur Indonesia.
 """)
 
+#2. Analisis diagnostik 
 # ---------------------------------------------------------
-# 4.3.2. ANALISIS DIAGNOSTIK: INTEGRITAS MANUSIA & KETAHANAN EKONOMI
+# 2. ANALISIS DIAGNOSTIK: KOREKSI MARGIN EFISIENSI
 # ---------------------------------------------------------
-st.header("2. Analisis Diagnostik: Korelasi Eksploitasi vs. Pertumbuhan")
+st.subheader("2. Analisis Diagnostik: Membongkar Mitos 'Penghematan 97,8%'")
 
-# --- 1. PERSIAPAN DATA DIAGNOSTIK ---
-# Menggabungkan data Slavery dan GDP untuk analisis korelasi
-df_diag = pd.merge(slavery, gdp, on='Country')
-df_diag['Slavery_Percentage'] = pd.to_numeric(df_diag['Slavery_Percentage'], errors='coerce')
-df_diag['GDP Growth'] = pd.to_numeric(df_diag['GDP Growth'], errors='coerce')
-df_diag = df_diag.dropna(subset=['Slavery_Percentage', 'GDP Growth'])
+# Menggunakan data dari variabel yang sudah didefinisikan sebelumnya
+biaya_standar = 5400000  # Rp 5.4jt (Upah + Overhead)
+biaya_eksploitasi = 120000  # Rp 120rb (Subsistensi)
+margin_palsu = ((biaya_standar - biaya_eksploitasi) / biaya_standar) * 100
 
-# Data Tahanan untuk Diagnostik Beban Sosial (Fixing the AttributeError)
-def parse_tahanan_value(val):
-    if isinstance(val, str):
-        return int(val.replace(',', '').replace('.', ''))
-    return int(val)
+col1, col2 = st.columns([2, 1])
 
-total_penghuni = parse_tahanan_value(tahanan.iloc[0, 1])
-kapasitas = parse_tahanan_value(tahanan.iloc[1, 1])
-overcapacity_pct = (total_penghuni / kapasitas) * 100
-
-col_diag1, col_diag2 = st.columns([2, 1])
-
-with col_diag1:
-    # Scatter Plot Diagnostik: Slavery vs Growth
-    fig_diag = px.scatter(
-        df_diag,
-        x='Slavery_Percentage',
-        y='GDP Growth',
-        color='Region',
-        size='Population',
-        hover_name='Country',
-        trendline="ols",
-        title="Diagnostik Global: Prevalensi Perbudakan vs. Pertumbuhan GDP",
-        labels={'Slavery_Percentage': 'Prevalensi Perbudakan (%)', 'GDP Growth': 'Pertumbuhan GDP (%)'},
-        template="plotly_white",
-        color_discrete_sequence=px.colors.qualitative.Safe
+with col1:
+    # Visualisasi yang membandingkan Biaya Operasional vs Risiko Kehilangan Pasar
+    # Angka 100% mewakili total potensi ekonomi saat ini
+    df_risiko = pd.DataFrame({
+        'Aspek Ekonomi': ['Margin Keuntungan Langsung', 'Akses Pasar Ekspor', 'Daya Beli Domestik', 'Stabilitas Keamanan'],
+        'Model Eksploitasi': [margin_palsu, 5, 2, 10], # Angka rendah menunjukkan kehancuran akses/daya beli
+        'Model Standar': [30, 100, 100, 100]
+    })
+    
+    fig_diag = px.bar(
+        df_risiko, 
+        x='Aspek Ekonomi', 
+        y=['Model Standar', 'Model Eksploitasi'],
+        barmode='group',
+        title="Diagnosa Dampak: Penghematan Biaya vs Kehancuran Ekosistem",
+        color_discrete_sequence=['#1E88E5', '#FF4B4B'],
+        template="plotly_white"
     )
-    
-    # Tambahkan garis kuadran (Median)
-    fig_diag.add_hline(y=df_diag['GDP Growth'].median(), line_dash="dot", line_color="gray")
-    fig_diag.add_vline(x=df_diag['Slavery_Percentage'].median(), line_dash="dot", line_color="gray")
-    
-    # Highlight Posisi Indonesia
-    indo_data = df_diag[df_diag['Country'] == 'Indonesia']
-    if not indo_data.empty:
-        fig_diag.add_trace(go.Scatter(
-            x=indo_data['Slavery_Percentage'], 
-            y=indo_data['GDP Growth'],
-            mode='markers+text',
-            text=['INDONESIA'],
-            textposition='top center',
-            marker=dict(color='red', size=15, symbol='star'),
-            name='Posisi Indonesia'
-        ))
-
     st.plotly_chart(fig_diag, use_container_width=True)
 
-with col_diag2:
-    # Gauge Chart: Diagnostik Overkapasitas (Beban Sistemik)
-    fig_gauge = go.Figure(go.Indicator(
-        mode = "gauge+number",
-        value = overcapacity_pct,
-        title = {'text': "Okupansi Penjara (%)<br><span style='font-size:0.8em;color:gray'>Diagnostik Friksi Sosial</span>"},
-        domain = {'x': [0, 1], 'y': [0, 1]},
-        gauge = {
-            'axis': {'range': [0, 250]},
-            'bar': {'color': "#e74c3c"},
-            'steps': [
-                {'range': [0, 100], 'color': "#2ecc71"},
-                {'range': [100, 150], 'color': "#f1c40f"},
-                {'range': [150, 250], 'color': "#c0392b"}
-            ],
-            'threshold': {
-                'line': {'color': "black", 'width': 4},
-                'thickness': 0.75,
-                'value': overcapacity_pct}
-        }
-    ))
-    fig_gauge.update_layout(height=350, margin=dict(l=20, r=20, t=50, b=20))
-    st.plotly_chart(fig_gauge, use_container_width=True)
-    
-    st.info(f"**Beban Sistemik:** Kapasitas penjara saat ini terisi **{overcapacity_pct:.1f}%**.")
+with col2:
+    st.metric("Klaim Margin Efisiensi", f"{margin_palsu:.1f}%", delta="-100% Risiko Global", delta_color="inverse")
+    st.write("""
+    **Analisis Kerugian Tersembunyi:**
+    Setiap 1% 'penghematan' yang didapat dari menekan upah di bawah batas subsistensi berbanding lurus dengan peningkatan risiko sanksi perdagangan internasional.
+    """)
 
-# --- 3. NARASI DEBUNKING DIAGNOSTIK ---
 st.markdown(f"""
-<div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 5px solid #1E88E5;">
-    <h3>🔍 Insight Diagnostik: Membongkar Mitos 'Slavery Dividend'</h3>
-    <p>Analisis diagnostik ini menunjukkan bahwa menekan hak dasar manusia tidak berkorelasi dengan percepatan ekonomi yang sehat:</p>
+<div class="analysis-box" style="border-left: 5px solid #FF4B4B;">
+    <h4 style="color: #FF4B4B; margin-top:0;">⚠️ Koreksi Logika Atas Angka Rp 120.000</h4>
+    <p>Meskipun secara matematis biaya <b>Rp 120.000</b> (4 kotak rokok) memberikan margin <b>{margin_palsu:.1f}%</b> dibandingkan upah standar, model ini mengandung cacat diagnosa yang fatal:</p>
     <ul>
-        <li><b>Ketiadaan Korelasi Positif:</b> Tren garis (OLS) menunjukkan bahwa peningkatan prevalensi perbudakan modern <i>tidak</i> menjamin pertumbuhan GDP yang lebih tinggi secara global.</li>
-        <li><b>Risiko Sosial Tinggi:</b> Tingkat okupansi penjara <b>{overcapacity_pct:.1f}%</b> adalah sinyal peringatan (Red Flag). Model ekonomi yang terlalu menekan rakyat akan meningkatkan angka kriminalitas dan biaya stabilitas negara.</li>
-        <li><b>Pertumbuhan Berkualitas:</b> Negara-negara di kuadran kiri atas (Slavery rendah, Growth tinggi) membuktikan bahwa perlindungan martabat manusia adalah mesin pertumbuhan yang lebih berkelanjutan.</li>
+        <li><b>State Failure Cost:</b> Penghematan biaya buruh akan berpindah menjadi biaya negara untuk menangani kelaparan, kesehatan buruk, dan kerusuhan sosial yang timbul akibat upah tidak layak.</li>
+        <li><b>Productivity Trap:</b> Tenaga kerja dengan biaya Rp 120rb/bulan tidak akan memiliki kapasitas fisik dan mental untuk menjalankan mesin industri modern, sehingga <i>Manufacturing Value Added</i> (MVA) justru akan merosot.</li>
+        <li><b>International Embargo:</b> Berdasarkan data global di Bab I, negara dengan sistem kerja paksa akan segera diisolasi dari rantai pasok global, membuat barang yang diproduksi tidak bisa dijual ke luar negeri.</li>
     </ul>
 </div>
 """, unsafe_allow_html=True)
@@ -490,7 +444,7 @@ fig9.add_trace(go.Scatter(
 fig9.add_trace(go.Scatter(x=proj_honest['Tahun'], y=proj_honest['Mean_Proj'], mode='lines+markers', line_color='#1E88E5', name='Proyeksi Historis'))
 
 fig9.update_layout(
-    title=f"Proyeksi GDP Indonesia Berdasarkan Tren Riil ({avg_growth_indo*100:.1f}%)", 
+    title=f"Proyeksi GDP Indonesia Berdasarkan Tren ({avg_growth_indo*100:.1f}%)", 
     xaxis_title="Tahun", yaxis_title="Estimasi GDP (Triliun IDR)", 
     template="plotly_white"
 )

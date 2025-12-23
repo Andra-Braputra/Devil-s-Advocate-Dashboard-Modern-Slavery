@@ -1,0 +1,152 @@
+Country,Rating,Status,Trend
+Afghanistan,5+,No guarantee of rights due to the breakdown of the law,Stable
+Burundi,5+,No guarantee of rights due to the breakdown of the law,Stable
+Central African Republic,5+,No guarantee of rights due to the breakdown of the law,Stable
+Haiti,5+,No guarantee of rights due to the breakdown of the law,Stable
+Libya,5+,No guarantee of rights due to the breakdown of the law,Stable
+Myanmar,5+,No guarantee of rights due to the breakdown of the law,Stable
+Palestine,5+,No guarantee of rights due to the breakdown of the law,Stable
+Somalia,5+,No guarantee of rights due to the breakdown of the law,Stable
+South Sudan,5+,No guarantee of rights due to the breakdown of the law,Stable
+Sudan,5+,No guarantee of rights due to the breakdown of the law,Stable
+Syria,5+,No guarantee of rights due to the breakdown of the law,Stable
+Yemen,5+,No guarantee of rights due to the breakdown of the law,Stable
+Algeria,5,No guarantee of rights,Stable
+Bahrain,5,No guarantee of rights,Stable
+Bangladesh,5,No guarantee of rights,Stable
+Belarus,5,No guarantee of rights,Stable
+Cambodia,5,No guarantee of rights,Stable
+China,5,No guarantee of rights,Stable
+Colombia,5,No guarantee of rights,Stable
+Ecuador,5,No guarantee of rights,Stable
+Egypt,5,No guarantee of rights,Stable
+Eritrea,5,No guarantee of rights,Stable
+Eswatini,5,No guarantee of rights,Stable
+Guatemala,5,No guarantee of rights,Stable
+Honduras,5,No guarantee of rights,Stable
+Hong Kong,5,No guarantee of rights,Stable
+India,5,No guarantee of rights,Stable
+Indonesia,5,No guarantee of rights,Stable
+Iran,5,No guarantee of rights,Stable
+Iraq,5,No guarantee of rights,Stable
+Jordan,5,No guarantee of rights,Stable
+Kazakhstan,5,No guarantee of rights,Stable
+Korea (Republic of),5,No guarantee of rights,Stable
+Kuwait,5,No guarantee of rights,Stable
+Kyrgyzstan,5,No guarantee of rights,Stable
+Laos,5,No guarantee of rights,Stable
+Malaysia,5,No guarantee of rights,Stable
+Mauritania,5,No guarantee of rights,Worsening
+Nigeria,5,No guarantee of rights,Stable
+Pakistan,5,No guarantee of rights,Stable
+Philippines,5,No guarantee of rights,Stable
+Qatar,5,No guarantee of rights,Stable
+Russian Federation,5,No guarantee of rights,Stable
+Saudi Arabia,5,No guarantee of rights,Stable
+Thailand,5,No guarantee of rights,Stable
+Tunisia,5,No guarantee of rights,Stable
+Türkiye,5,No guarantee of rights,Stable
+Ukraine,5,No guarantee of rights,Stable
+United Arab Emirates,5,No guarantee of rights,Stable
+Venezuela,5,No guarantee of rights,Stable
+Zimbabwe,5,No guarantee of rights,Stable
+Angola,4,Systematic violations of rights,Stable
+Argentina,4,Systematic violations of rights,Worsening
+Benin,4,Systematic violations of rights,Stable
+Botswana,4,Systematic violations of rights,Stable
+Brazil,4,Systematic violations of rights,Stable
+Burkina Faso,4,Systematic violations of rights,Stable
+Cameroon,4,Systematic violations of rights,Stable
+Chad,4,Systematic violations of rights,Stable
+Congo (Democratic Republic of),4,Systematic violations of rights,Stable
+Costa Rica,4,Systematic violations of rights,Worsening
+Djibouti,4,Systematic violations of rights,Stable
+El Salvador,4,Systematic violations of rights,Stable
+Ethiopia,4,Systematic violations of rights,Stable
+Fiji,4,Systematic violations of rights,Stable
+Georgia,4,Systematic violations of rights,Worsening
+Greece,4,Systematic violations of rights,Stable
+Guinea,4,Systematic violations of rights,Stable
+Guinea-Bissau,4,Systematic violations of rights,Stable
+Hungary,4,Systematic violations of rights,Stable
+Israel,4,Systematic violations of rights,Stable
+Kenya,4,Systematic violations of rights,Stable
+Lebanon,4,Systematic violations of rights,Stable
+Lesotho,4,Systematic violations of rights,Stable
+Liberia,4,Systematic violations of rights,Stable
+Madagascar,4,Systematic violations of rights,Stable
+Mali,4,Systematic violations of rights,Stable
+Niger,4,Systematic violations of rights,Worsening
+North Macedonia,4,Systematic violations of rights,Stable
+Panama,4,Systematic violations of rights,Worsening
+Peru,4,Systematic violations of rights,Stable
+Senegal,4,Systematic violations of rights,Stable
+Serbia,4,Systematic violations of rights,Stable
+Sierra Leone,4,Systematic violations of rights,Stable
+Sri Lanka,4,Systematic violations of rights,Stable
+Tanzania,4,Systematic violations of rights,Stable
+Trinidad and Tobago,4,Systematic violations of rights,Stable
+Uganda,4,Systematic violations of rights,Stable
+United Kingdom,4,Systematic violations of rights,Stable
+United States of America,4,Systematic violations of rights,Stable
+Vietnam,4,Systematic violations of rights,Stable
+Zambia,4,Systematic violations of rights,Stable
+Albania,3,Regular violations of rights,Stable
+Armenia,3,Regular violations of rights,Stable
+Bahamas,3,Regular violations of rights,Stable
+Belgium,3,Regular violations of rights,Stable
+Belize,3,Regular violations of rights,Stable
+Bolivia,3,Regular violations of rights,Stable
+Bosnia and Herzegovina,3,Regular violations of rights,Stable
+Bulgaria,3,Regular violations of rights,Stable
+Canada,3,Regular violations of rights,Stable
+Chile,3,Regular violations of rights,Stable
+Congo (Republic of),3,Regular violations of rights,Stable
+Côte d'Ivoire,3,Regular violations of rights,Stable
+Gabon,3,Regular violations of rights,Stable
+Jamaica,3,Regular violations of rights,Stable
+Mauritius,3,Regular violations of rights,Stable
+Mexico,3,Regular violations of rights,Improving
+Montenegro,3,Regular violations of rights,Stable
+Morocco,3,Regular violations of rights,Stable
+Mozambique,3,Regular violations of rights,Stable
+Namibia,3,Regular violations of rights,Stable
+Nepal,3,Regular violations of rights,Stable
+Oman,3,Regular violations of rights,Improving
+Paraguay,3,Regular violations of rights,Stable
+Poland,3,Regular violations of rights,Stable
+Romania,3,Regular violations of rights,Stable
+Rwanda,3,Regular violations of rights,Stable
+South Africa,3,Regular violations of rights,Stable
+Switzerland,3,Regular violations of rights,Stable
+Togo,3,Regular violations of rights,Stable
+Australia,2,Repeated violations of rights,Improving
+Barbados,2,Repeated violations of rights,Stable
+Croatia,2,Repeated violations of rights,Stable
+Czechia,2,Repeated violations of rights,Stable
+Dominican Republic,2,Repeated violations of rights,Stable
+Estonia,2,Repeated violations of rights,Stable
+Finland,2,Repeated violations of rights,Stable
+France,2,Repeated violations of rights,Stable
+Ghana,2,Repeated violations of rights,Stable
+Italy,2,Repeated violations of rights,Worsening
+Japan,2,Repeated violations of rights,Stable
+Latvia,2,Repeated violations of rights,Stable
+Lithuania,2,Repeated violations of rights,Stable
+Malawi,2,Repeated violations of rights,Stable
+Moldova,2,Repeated violations of rights,Stable
+Netherlands,2,Repeated violations of rights,Stable
+New Zealand,2,Repeated violations of rights,Stable
+Portugal,2,Repeated violations of rights,Stable
+Singapore,2,Repeated violations of rights,Stable
+Slovakia,2,Repeated violations of rights,Stable
+Spain,2,Repeated violations of rights,Stable
+Taiwan,2,Repeated violations of rights,Stable
+Uruguay,2,Repeated violations of rights,Stable
+Austria,1,Sporadic violations of rights,Stable
+Denmark,1,Sporadic violations of rights,Stable
+Germany,1,Sporadic violations of rights,Stable
+Iceland,1,Sporadic violations of rights,Stable
+Ireland,1,Sporadic violations of rights,Stable
+Norway,1,Sporadic violations of rights,Stable
+Sweden,1,Sporadic violations of rights,Stable
