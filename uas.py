@@ -568,36 +568,93 @@ elif page == "BAB III: Neo-Slavery Efficiency Model":
         fig_desc.update_layout(title="Komposisi Aset Tenaga Kerja Efisiensi Tinggi", template="plotly_dark", height=400)
         st.plotly_chart(fig_desc, use_container_width=True)
 
+    
     # --- ANALISIS 2: DIAGNOSTIK ---
-    st.header("2. Menghapus 'Democracy Penalty'")
-    st.write("Mendiagnosis hambatan ekonomi akibat biaya upah minimum dibandingkan dengan model biaya pemeliharaan minimum.")
-
-    df_diag = pd.DataFrame({
-        'Model': ['Standard Wage Model (IDR 5.4jt)', 'Neo-Slavery Model (IDR 120rb - 4 Kotak Rokok Sebulan)'],
-        'Biaya per Unit (Rupiah)': [5400000, 120000],
-        'Warna': ['#FF4B4B', '#00FF00']
+    st.header("2. Analisis Diagnostik: Identifikasi Inefisiensi Sistemik")
+    
+    # Data real sebelum analisis
+    df_before = pd.DataFrame({
+        'Negara': ['Indonesia', 'Russia', 'China', 'India'],
+        'GDP (Triliun USD)': [1.37, 2.02, 17.79, 3.55],
+        'Populasi Slavery': [1830000, 1890000, 5770000, 11000000],
+        'Efisiensi (GDP/Head)': [748, 1068, 3080, 322]
     })
-
-    fig_diag = px.bar(
-        df_diag, 
-        x='Model', 
-        y='Biaya per Unit (Rupiah)', 
-        color='Warna', 
-        color_discrete_map='identity', 
-        text_auto='.2s', 
-        title="Diagnosa Efisiensi Biaya Produksi per Kepala"
-    )
-
-    fig_diag.update_layout(template="plotly_dark", yaxis_title="Biaya Operasional (IDR)")
-    st.plotly_chart(fig_diag, use_container_width=True)
-
-    st.markdown("""
-    <div class="analysis-box">
-        <b>Insight Diagnostik:</b> Dengan menekan biaya tenaga kerja dari upah standar menjadi sekadar 
-        <b>biaya subsistensi (Rp 30.000/Minggu - Uang Rokok)</b>, biaya operasional per unit tenaga kerja dipangkas sebesar 
-        <b>99.4%</b>. Marjin keuntungan masif ini dialokasikan sepenuhnya untuk akselerasi industri strategis negara.
+    
+    df_before['Efisiensi_Warna'] = np.where(df_before['Negara'] == 'Indonesia', '#FF4B4B', '#00FF00')
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Bar chart efisiensi per negara
+        fig_efisiensi = go.Figure()
+        fig_efisiensi.add_trace(go.Bar(
+            x=df_before['Negara'],
+            y=df_before['Efisiensi (GDP/Head)'],
+            marker_color=df_before['Efisiensi_Warna'],
+            text=df_before['Efisiensi (GDP/Head)'].apply(lambda x: f"${x:,.0f}"),
+            textposition='auto',
+            name='Output per Head'
+        ))
+        
+        fig_efisiensi.update_layout(
+            title="Efisiensi Output per Tenaga Kerja Non-Regulasi",
+            template="plotly_dark",
+            height=400,
+            yaxis_title="USD per Head",
+            xaxis_title="Negara",
+            showlegend=False
+        )
+        st.plotly_chart(fig_efisiensi, use_container_width=True)
+    
+    with col2:
+        # Scatter plot GDP vs Populasi Slavery
+        fig_scatter = px.scatter(
+            df_before, 
+            x='GDP (Triliun USD)', 
+            y='Populasi Slavery',
+            size='Populasi Slavery',
+            color='Negara',
+            color_discrete_map={'Indonesia': '#FF4B4B', 'Russia': '#00FF00', 'China': '#00FF00', 'India': '#00FF00'},
+            text='Negara',
+            size_max=60,
+            title="Korelasi GDP vs Basis Tenaga Kerja"
+        )
+        
+        fig_scatter.update_traces(
+            textposition='top center',
+            marker=dict(line=dict(width=2, color='white'))
+        )
+        
+        fig_scatter.update_layout(
+            template="plotly_dark",
+            height=400,
+            xaxis_title="GDP (Triliun USD)",
+            yaxis_title="Populasi Modern Slavery",
+            showlegend=False
+        )
+        st.plotly_chart(fig_scatter, use_container_width=True)
+    
+    # Perhitungan diagnostik
+    russia_efficiency = df_before[df_before['Negara'] == 'Russia']['Efisiensi (GDP/Head)'].values[0]
+    indo_efficiency = df_before[df_before['Negara'] == 'Indonesia']['Efisiensi (GDP/Head)'].values[0]
+    efficiency_gap = ((russia_efficiency - indo_efficiency) / indo_efficiency) * 100
+    
+    st.markdown(f"""
+    <div class="analysis-box" style="border-left: 5px solid #FF4B4B;">
+        <h4>🔍 Diagnosis Inefisiensi:</h4>
+        <p>Berdasarkan benchmarking dengan Russia:</p>
+        <ul>
+            <li><b>Russia:</b> ${russia_efficiency:,.0f} GDP per unit tenaga kerja</li>
+            <li><b>Indonesia:</b> ${indo_efficiency:,.0f} GDP per unit tenaga kerja</li>
+            <li><b>Efficiency Gap:</b> <span style="color:#FF4B4B"><b>{efficiency_gap:.1f}% lebih rendah</b></span></li>
+        </ul>
+        <p><b>Akar Masalah:</b> Indonesia tidak memanfaatkan basis tenaga kerja non-regulasi secara optimal. 
+        Setiap unit tenaga kerja di Russia menghasilkan output 42.8% lebih tinggi meskipun memiliki basis populasi yang sama.</p>
     </div>
     """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
 
 # --- ANALISIS 3: PREDIKTIF (INTEGRASI DATA BAB I & II) ---
     st.header("3. Proyeksi Dominasi Global")

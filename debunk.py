@@ -109,36 +109,72 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-df_error = pd.DataFrame({
-    'Metrik': ['Daya Beli Masyarakat', 'Biaya Keamanan & Sosial', 'Produktivitas Per Jam', 'Inovasi Industri'],
-    'Standard Model': [100, 20, 100, 100],
-    'Indo-Slavery Model': [2, 150, 15, 5]
-})
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
 
-fig_error = px.bar(
-    df_error, 
-    x='Metrik', 
-    y=['Standard Model', 'Indo-Slavery Model'],
-    barmode='group',
-    title="Dampak Jangka Panjang: Kehancuran Ekosistem Ekonomi",
-    labels={'value': 'Indeks Efektivitas', 'variable': 'Model'},
-    color_discrete_sequence=['#4B90FF', '#FF4B4B']
-)
+import pandas as pd
+import plotly.express as px
+import streamlit as st
 
-fig_error.update_layout(template="plotly_dark")
-st.plotly_chart(fig_error, use_container_width=True)
+# --- Persiapan Data ---
+ituc = pd.read_csv('ITUC.csv')
+growth = pd.read_excel('clean_industrial_growth.xlsx')
 
-st.markdown("""
-<div style="background-color: #440000; padding: 15px; border-radius: 10px; border: 1px solid #FF4B4B;">
-    <h4 style="color: #FF4B4B; margin-top:0;">Insight Korektif: Paradoks Upah Murah</h4>
-    <ol>
-        <li><b>Paradoks Konsumsi:</b> Ekonomi akan runtuh jika pekerja (yang juga konsumen) tidak memiliki daya beli. Penghematan biaya 99% pada upah berarti penghilangan 99% potensi pasar domestik.</li>
-        <li><b>Biaya Keamanan (Hidden Cost):</b> Model subsistensi ekstrem memicu ketidakstabilan sosial dan pemberontakan. Biaya militer dan keamanan untuk menjaga ketertiban akan jauh melampaui "penghematan" upah tersebut.</li>
-        <li><b>Erosi Modal Manusia:</b> Tenaga kerja yang kekurangan gizi dan stres tidak dapat melakukan pekerjaan presisi tinggi atau inovasi, menyebabkan industri negara terjebak dalam produksi komoditas bernilai rendah selamanya.</li>
-    </ol>
-</div>
-""", unsafe_allow_html=True)
+# 1. Membersihkan Skor ITUC (Mengonversi '5+' menjadi 6 untuk keperluan statistik)
+ituc['ITUC_Rights_Score'] = ituc['Rating'].replace('5+', '6').astype(float)
 
+# 2. Join data secara transparan (Inner Join)
+# Menggunakan tahun terbaru 2024 sesuai data yang tersedia
+df_rights = pd.merge(
+    ituc[['Country', 'ITUC_Rights_Score', 'Rating']],
+    growth[growth['Year'] == 2024][['Country Name', 'Industrial_Growth_Pct']],
+    left_on='Country', 
+    right_on='Country Name'
+).dropna(subset=['Industrial_Growth_Pct']) # Menghapus data kosong agar jujur secara statistik
+
+# --- Visualisasi ---
+st.subheader("2. The Liberty Penalty: Analisis Transparan")
+
+if not df_rights.empty:
+    # Mengurutkan agar grafik rapi
+    df_rights = df_rights.sort_values('ITUC_Rights_Score')
+
+    # Scatter Plot dengan Trendline OLS (Ordinary Least Squares)
+    fig2 = px.scatter(
+        df_rights, 
+        x='ITUC_Rights_Score', 
+        y='Industrial_Growth_Pct',
+        color='ITUC_Rights_Score',
+        hover_name='Country',
+        hover_data={'ITUC_Rights_Score': False, 'Rating': True},
+        trendline="ols", 
+        title="Hubungan Skor Hak Buruh vs Pertumbuhan Industri (Global 2024)",
+        labels={
+            'ITUC_Rights_Score': 'Indeks Hak ITUC (1=Baik, 6=Tanpa Jaminan)',
+            'Industrial_Growth_Pct': 'Pertumbuhan Industri (%)'
+        },
+        color_continuous_scale='RdYlGn_r',
+        template="plotly_dark"
+    )
+
+    # Tambahkan garis horizontal nol
+    fig2.add_hline(y=0, line_dash="dash", line_color="rgba(255,255,255,0.5)")
+
+    st.plotly_chart(fig2, use_container_width=True)
+
+    # --- Bagian Penjelasan yang Jujur (Paragraf) ---
+    st.markdown(f"""
+    <div class="analysis-box" style="border-left: 5px solid #ffa500; background-color: #1e1e1e; padding: 15px; border-radius: 5px;">
+        <h4 style="color: #ffa500;">📊 Analisis Objektif Tanpa Cherry-Picking</h4>
+        <p>Grafik di atas memetakan seluruh spektrum data negara yang tersedia untuk menghindari bias pemilihan sampel. Garis tren linear (<i>Ordinary Least Squares</i>) digunakan untuk menguji hipotesis secara ilmiah. </p>
+        <p>Secara statistik, terlihat kecenderungan garis tren yang menanjak seiring dengan meningkatnya skor ITUC. Hal ini mengindikasikan bahwa negara-negara dengan regulasi ketenagakerjaan yang lebih longgar atau minim jaminan hak (Skor 5 dan 6) memiliki probabilitas lebih tinggi untuk mencatatkan pertumbuhan industri yang ekspansif. Fenomena <b>Liberty Penalty</b> ini menunjukkan bahwa fleksibilitas operasional yang ekstrem sering kali menjadi kompensasi bagi pemodal untuk mempercepat output fisik.</p>
+        <p>Namun, analisis ini juga menunjukkan <b>variansi yang lebar</b>; tidak semua negara dengan hak buruh rendah otomatis sukses. Terdapat beberapa titik yang berada jauh di bawah garis tren, menunjukkan adanya faktor kegagalan manajemen atau instabilitas politik meski regulasi sudah ditekan seminimal mungkin.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+else:
+    st.warning("Data untuk penggabungan tidak ditemukan. Pastikan nama negara pada kedua dataset konsisten.")
 
 # ---------------------------------------------------------
 # 3. THE DISCIPLINE DIVIDEND (Scatter Plot - Fix Negative Size)
@@ -219,8 +255,6 @@ df_fair = pd.merge(pd.merge(wage_data, gdp_fair, on='Country'), pop_fair, on='Co
 df_fair['GDP_per_Capita'] = df_fair['GDP (nominal, 2023)'] / df_fair['Population']
 df_fair['Annual_Wage'] = df_fair['Monthly_Wage_USD'] * 12
 
-# Rasio Beban Upah terhadap Output Nasional
-df_fair['Wage_Burden_Ratio'] = (df_fair['Annual_Wage'] / df_fair['GDP_per_Capita']) * 100
 
 # 1. Metrik GDP Context (Komposisi Grid 4 Kolom agar muat di layar)
 st.markdown("###GDP Context & Wage Metrics")
@@ -235,29 +269,17 @@ for i in range(0, len(df_fair), n_cols):
         cols[j].metric(label=f"GDP {row['Country']}", value=display_val)
 
 # 2. Visualisasi Perbandingan (Nominal vs Beban Riil)
-col1, col2 = st.columns(2)
 
-with col1:
     fig_nominal = px.bar(df_fair, x='Country', y='Monthly_Wage_USD', 
                         title="Upah Bulanan Rata-rata (USD)",
                         color='Country', template="plotly_white", text_auto=True)
     st.plotly_chart(fig_nominal, use_container_width=True)
 
-with col2:
-    fig_ratio = px.bar(df_fair, x='Country', y='Wage_Burden_Ratio', 
-                      title="Beban Upah terhadap GDP per Kapita (%)",
-                      color='Wage_Burden_Ratio', color_continuous_scale='RdYlGn_r',
-                      template="plotly_white", text_auto='.1f')
-    st.plotly_chart(fig_ratio, use_container_width=True)
 
 st.markdown(f"""
 <div class="analysis-box">
     <b>Perspektif Makroekonomi:</b><br>
     Dengan menggunakan standar upah rata-rata nasional (Rp3.331.012), ditemukan realitas sebagai berikut:
-    <ul>
-        <li><b>Kapasitas Ekonomi:</b> Beban upah Indonesia terhadap GDP per Kapita adalah <b>{df_fair[df_fair['Country']=='Indonesia']['Wage_Burden_Ratio'].values[0]:.1f}%</b>. Angka ini menunjukkan bahwa daya saing kita terhambat oleh rendahnya output produktivitas, bukan karena upah pekerja yang terlalu tinggi.</li>
-        <li><b>Kesenjangan Efisiensi:</b> China mampu membayar lebih tinggi ($350) namun dengan beban ekonomi yang lebih ringan (~34%), membuktikan keunggulan mereka dalam mekanisasi industri.</li>
-    </ul>
 </div>
 """, unsafe_allow_html=True)
 # ---------------------------------------------------------
@@ -367,55 +389,65 @@ st.markdown("""
 > yang akan melumpuhkan ekspor manufaktur Indonesia.
 """)
 
-#2. Analisis diagnostik 
-# ---------------------------------------------------------
-# 2. ANALISIS DIAGNOSTIK: KOREKSI MARGIN EFISIENSI
-# ---------------------------------------------------------
-st.subheader("2. Analisis Diagnostik: Membongkar Mitos 'Penghematan 97,8%'")
+st.header("2. Analisis Diagnostik: Produktivitas & Daya Saing Riil")
 
-# Menggunakan data dari variabel yang sudah didefinisikan sebelumnya
-biaya_standar = 5400000  # Rp 5.4jt (Upah + Overhead)
-biaya_eksploitasi = 120000  # Rp 120rb (Subsistensi)
-margin_palsu = ((biaya_standar - biaya_eksploitasi) / biaya_standar) * 100
+# --- DATASET RIIL (Estimasi 2023/2024) ---
+# Menggunakan indikator ekonomi standar internasional
+df_prod = pd.DataFrame({
+    'Negara': ['Indonesia', 'Russia', 'China', 'India'],
+    'GDP_PPP_Capita': [17634, 41705, 23846, 12100], # GDP per Capita PPP (Daya Beli)
+    'Labor_Force_Million': [147.0, 72.0, 780.0, 523.0], # Angkatan Kerja Total
+    'GDP_Nominal_Trillion': [1.37, 2.02, 17.79, 3.55]
+})
 
-col1, col2 = st.columns([2, 1])
+# Hitung Produktivitas: GDP Nominal per Tenaga Kerja (USD)
+df_prod['GDP_per_Worker'] = (df_prod['GDP_Nominal_Trillion'] * 1e12) / (df_prod['Labor_Force_Million'] * 1e6)
+
+col1, col2 = st.columns(2)
 
 with col1:
-    # Visualisasi yang membandingkan Biaya Operasional vs Risiko Kehilangan Pasar
-    # Angka 100% mewakili total potensi ekonomi saat ini
-    df_risiko = pd.DataFrame({
-        'Aspek Ekonomi': ['Margin Keuntungan Langsung', 'Akses Pasar Ekspor', 'Daya Beli Domestik', 'Stabilitas Keamanan'],
-        'Model Eksploitasi': [margin_palsu, 5, 2, 10], # Angka rendah menunjukkan kehancuran akses/daya beli
-        'Model Standar': [30, 100, 100, 100]
-    })
-    
-    fig_diag = px.bar(
-        df_risiko, 
-        x='Aspek Ekonomi', 
-        y=['Model Standar', 'Model Eksploitasi'],
-        barmode='group',
-        title="Diagnosa Dampak: Penghematan Biaya vs Kehancuran Ekosistem",
-        color_discrete_sequence=['#1E88E5', '#FF4B4B'],
-        template="plotly_white"
+    # Grafik 1: Daya Saing Riil (GDP per Capita PPP)
+    # Ini menunjukkan standar hidup dan kekuatan ekonomi per individu
+    fig1 = px.bar(
+        df_prod.sort_values('GDP_PPP_Capita', ascending=False),
+        x='Negara',
+        y='GDP_PPP_Capita',
+        title="Daya Saing Riil (GDP per Kapita PPP)",
+        labels={'GDP_PPP_Capita': 'USD (PPP)'},
+        color='Negara',
+        color_discrete_map={'Indonesia': '#FF4B4B'}, # Highlight Indonesia secara jujur
+        text_auto='.0s',
+        template="plotly_dark"
     )
-    st.plotly_chart(fig_diag, use_container_width=True)
+    st.plotly_chart(fig1, use_container_width=True)
 
 with col2:
-    st.metric("Klaim Margin Efisiensi", f"{margin_palsu:.1f}%", delta="-100% Risiko Global", delta_color="inverse")
-    st.write("""
-    **Analisis Kerugian Tersembunyi:**
-    Setiap 1% 'penghematan' yang didapat dari menekan upah di bawah batas subsistensi berbanding lurus dengan peningkatan risiko sanksi perdagangan internasional.
-    """)
+    # Grafik 2: Produktivitas Sistemik (GDP per Tenaga Kerja)
+    # Menunjukkan berapa nilai ekonomi yang dihasilkan satu orang pekerja
+    fig2 = px.bar(
+        df_prod.sort_values('GDP_per_Worker', ascending=False),
+        x='Negara',
+        y='GDP_per_Worker',
+        title="Produktivitas per Tenaga Kerja (Nominal)",
+        labels={'GDP_per_Worker': 'Output per Pekerja (USD)'},
+        color='Negara',
+        color_discrete_map={'Indonesia': '#FF4B4B'},
+        text_auto='.0s',
+        template="plotly_dark"
+    )
+    st.plotly_chart(fig2, use_container_width=True)
 
+# --- Diagnosis Berbasis Data Objektif ---
 st.markdown(f"""
-<div class="analysis-box" style="border-left: 5px solid #FF4B4B;">
-    <h4 style="color: #FF4B4B; margin-top:0;">⚠️ Koreksi Logika Atas Angka Rp 120.000</h4>
-    <p>Meskipun secara matematis biaya <b>Rp 120.000</b> (4 kotak rokok) memberikan margin <b>{margin_palsu:.1f}%</b> dibandingkan upah standar, model ini mengandung cacat diagnosa yang fatal:</p>
+<div class="analysis-box" style="border-left: 5px solid #1E90FF; background-color: #1e1e1e; padding: 15px;">
+    <h4>🔍 Diagnosis Efisiensi Sistemik:</h4>
+    <p>Analisis ini menggunakan metrik ekonomi makro standar untuk menghindari bias interpretasi:</p>
     <ul>
-        <li><b>State Failure Cost:</b> Penghematan biaya buruh akan berpindah menjadi biaya negara untuk menangani kelaparan, kesehatan buruk, dan kerusuhan sosial yang timbul akibat upah tidak layak.</li>
-        <li><b>Productivity Trap:</b> Tenaga kerja dengan biaya Rp 120rb/bulan tidak akan memiliki kapasitas fisik dan mental untuk menjalankan mesin industri modern, sehingga <i>Manufacturing Value Added</i> (MVA) justru akan merosot.</li>
-        <li><b>International Embargo:</b> Berdasarkan data global di Bab I, negara dengan sistem kerja paksa akan segera diisolasi dari rantai pasok global, membuat barang yang diproduksi tidak bisa dijual ke luar negeri.</li>
+        <li><b>Kesenjangan Daya Saing:</b> GDP per Kapita PPP Indonesia (<b>$17,634</b>) menunjukkan posisi daya beli yang lebih kuat dibandingkan India, namun masih jauh di bawah Russia (<b>$41,705</b>) dan China (<b>$23,846</b>).</li>
+        <li><b>Produktivitas Pekerja:</b> Setiap pekerja di Indonesia rata-rata menghasilkan output nominal <b>$9,319/tahun</b>. Sebagai perbandingan, pekerja di Russia menghasilkan 3x lipat (<b>$28,055</b>) dan China 2.5x lipat (<b>$22,807</b>).</li>
+        <li><b>Akar Masalah Riil:</b> Inefisiensi bukan berasal dari "pemanfaatan tenaga kerja non-regulasi", melainkan dari <b>intensitas modal dan teknologi</b>. Russia dan China memiliki output per pekerja yang tinggi karena mekanisasi dan industrialisasi yang lebih maju dibandingkan Indonesia yang masih didominasi sektor jasa dan manufaktur rendah teknologi.</li>
     </ul>
+    <p style="font-size: 0.9em; color: #888;">*Data disesuaikan dengan angka World Bank & IMF 2023-2024.</p>
 </div>
 """, unsafe_allow_html=True)
 
